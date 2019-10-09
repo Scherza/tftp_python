@@ -30,8 +30,9 @@ def tftp_send(filename, sa, sp, cp):
 		except EOFError as e:
 			break
 		# send bit
-		datagram = get_datagram(ack, data)
-		sock.sendto( datagram, server_address )
+		else:
+			datagram = get_datagram(ack, data)
+			sock.sendto( datagram, server_address )
 		# await ack
 		try:
 			ackgram, addr = sock.recvfrom(512)
