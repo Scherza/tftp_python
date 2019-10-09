@@ -21,7 +21,7 @@ def tftp_send(filename, sa, sp, cp):
 	sock.sendto( build_request_wrq(filename), server_address )
 	ackgram, addr =  sock.recvfrom(512)
 	ack = get_ack(ackgram)
-	notify("Received ack " + str(ack) + " from server.")
+	notify("Received ack " + str(ack) + " from " + addr)
 	trycount = 0
 
 	while True:
@@ -42,6 +42,8 @@ def tftp_send(filename, sa, sp, cp):
 			break
 		else:
 			ack = get_ack(ackgram)
+
+
 	file.close()
 	sock.close()
 
@@ -53,9 +55,9 @@ class tftp_file_wrapper_send:
 		self.cache = ""
 	def read(self, ack):
 		try:# if cached item requested, return item. if next requested, return next. Else fail.
-			if ack == self.offset:
+			if ack == self.offset - 1:
 				return self.cache
-			elif ack == self.offset + 1:
+			elif ack == self.offset:
 				self.cache = self.file.read(CHUNK_SIZE)
 				offset = ack
 				return self.cache
