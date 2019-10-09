@@ -43,15 +43,15 @@ def tftp_receive(filename, server_addr, sp, cp):
 
 		if len(data) < 512:
 			file.close()
-			socket.close()
+			sock.close()
 			return
 
 ##### Class to abstract file access. #######
 class tftp_file_wrapper_receive:
 	def __init__(self, filename):
-		file = open(filename, 'xb') #todo: try/catch
-		offset = 0
-		block_num = 0
+		self.file = open(filename, 'xb') #todo: try/catch
+		self.offset = 0
+		self.block_num = 0
 	def writeto(self, block_ack, data):
 		# appends to file if expected block number. Else excepts.
 		if self.block_num == block_ack:
@@ -60,6 +60,8 @@ class tftp_file_wrapper_receive:
 		else:
 			#out-of-order packet. Alternatively, file out-of-range.
 			raise Exception("Packet received out-of-order, or out-of-range.")
+	def close(self):
+		self.file.close()
 
 def build_request_rrq(filename):
 	opcode = b'\x00\x01' #opcode 1 for 'gimme file'

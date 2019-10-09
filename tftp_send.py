@@ -45,14 +45,14 @@ def tftp_send(filename, sa, sp, cp):
 
 		if len(data) < 512 and trycount == 0:
 			file.close()
-			socket.close()
+			sock.close()
 
 		
 class tftp_file_wrapper_send:
 	def __init__(self, filename):
-		file = open(filename, 'rb')
-		offset = -1
-		cache = None
+		self.file = open(filename, 'rb')
+		self.offset = -1
+		self.cache = None
 	def read(self, ack):
 		try:# if cached item requested, return item. if next requested, return next. Else fail.
 			if ack == self.offset:
@@ -68,7 +68,9 @@ class tftp_file_wrapper_send:
 			raise e #This is the completion condition. 
 		except Exception as e:
 			perror("An unknown exception has occurred while trying to read file data.")
-			raise e 
+			raise e
+	def close(self):
+		self.file.close()
 
 def build_request_wrq(filename):
 	opcode = b'\x00\x02' #opcode 1 for 'gimme file'
