@@ -50,7 +50,7 @@ def tftp_send(filename, sa, sp, cp):
 		
 class tftp_file_wrapper_send:
 	def __init__(self, filename):
-		self.file = open(filename, 'rb')
+		self.file = open(filename, 'r')
 		self.offset = -1
 		self.cache = None
 	def read(self, ack):
@@ -90,4 +90,5 @@ def get_ack(ackgram):
 def get_datagram(ack, data):
 	opcode = b'\x00\x03'
 	acknowledgement = ack.to_bytes(2, byteorder='big')
+	datum = data.encode('ascii')
 	return opcode + acknowledgement + data

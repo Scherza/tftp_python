@@ -55,7 +55,7 @@ def tftp_receive(filename, server_addr, sp, cp):
 ##### Class to abstract file access. #######
 class tftp_file_wrapper_receive:
 	def __init__(self, filename):
-		self.file = open(filename, 'xb') #todo: try/catch
+		self.file = open(filename, 'x') #todo: try/catch
 		self.offset = 0
 		self.block_num = 0
 	def writeto(self, block_ack, data):
@@ -79,7 +79,7 @@ def unpack_data_packet( datagram ):
 	opcode = int.from_bytes(datagram[0:2], byteorder='big')
 	if opcode == 3:
 		block_num = int.from_bytes(datagram[2:4], byteorder='big')
-		data = datagram[4:]
+		data = datagram[4:].decode()
 		return opcode, block_num, data
 	else:
 		raise TypeError
