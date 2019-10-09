@@ -1,7 +1,7 @@
 
 import socket
 
-from support import perror
+from support import perror, notify
 
 CHUNK_SIZE = 512 # Bytes
 
@@ -21,6 +21,7 @@ def tftp_send(filename, sa, sp, cp):
 	sock.sendto( build_request_wrq(filename), server_address )
 	ackgram, addr =  sock.recvfrom(512)
 	ack = get_ack(ackgram)
+	notify("Received ack " + str(ack) + " from server.")
 	trycount = 0
 
 	while True:
@@ -49,15 +50,15 @@ class tftp_file_wrapper_send:
 	def __init__(self, filename):
 		self.file = open(filename, 'r')
 		self.offset = 0
-		self.cache = None
+		self.cache = ""
 	def read(self, ack):
 		try:# if cached item requested, return item. if next requested, return next. Else fail.
 			if ack == self.offset:
 				return self.cache
 			elif ack == self.offset + 1:
-				cache = self.file.read(CHUNK_SIZE)
+				self.cache = self.file.read(CHUNK_SIZE)
 				offset = ack
-				return cache 
+				return self.cache
 			else:
 				perror("An attempt was made to read file data out-of-order.")
 				raise Exception
@@ -88,4 +89,4 @@ def get_datagram(ack, data):
 	opcode = b'\x00\x03'
 	acknowledgement = ack.to_bytes(2, byteorder='big')
 	datum = data.encode('ascii')
-	return opcode + acknowledgement + data
+	return opcode + acknowledgement + datum
