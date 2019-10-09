@@ -20,14 +20,14 @@ def tftp_receive(filename, server_addr, sp, cp):
 	## Send Request ##
 	sock.sendto(build_request_rrq(filename), server_address )
 	trycount = 0
-	notify("Receiving data from " + server_addr + " : " + sp + " and receiving at " + cp + ".")
+	notify("Receiving data from " + server_addr + " : " + str(sp) + " and receiving at " + str(cp) + ".")
 	## Receive Data ## #todo: check for error packets sent.
 	while True:
 
 		try:
 			datagram, addr = sock.recvfrom(CHUNK_SIZE + HEADER_SIZE + 16) 
 			opcode, block_num, data = unpack_data_packet(datagram)
-			notify("Received " + block_num + " from server.")
+			notify("Received " + str(block_num) + " from server.")
 		except socket.timeout as e:
 			perror("System Timeout has occurred; server may have terminated early.")
 			return
