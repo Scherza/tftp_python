@@ -1,8 +1,8 @@
 # coded by davidson, cole on 2019-09-30
 
 import argparse
-import tftp_send.py
-import tftp_receive.py
+import tftp_send
+import tftp_receive
 
 # Building variables, parsing arguments.
 from support import perror
@@ -26,8 +26,8 @@ mode = args.m
 
 # I'd make a main method, but this is python. Here begins main.
 if mode == 'w':
-	tftp_send( filename, server_ip, server_port, client_port )
+	tftp_send.tftp_send( filename, server_ip, server_port, client_port )
 elif mode == 'r':
-	tftp_receive( filename, server_ip, server_port, client_port )
+	tftp_receive.tftp_receive( filename, server_ip, server_port, client_port )
 else:
 	perror("Mode must be either r (read) or w (write)")
