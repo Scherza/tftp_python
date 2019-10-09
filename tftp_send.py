@@ -47,7 +47,7 @@ def tftp_send(filename, sa, sp, cp):
 class tftp_file_wrapper_send:
 	def __init__(self, filename):
 		self.file = open(filename, 'r')
-		self.offset = -1
+		self.offset = 0
 		self.cache = None
 	def read(self, ack):
 		try:# if cached item requested, return item. if next requested, return next. Else fail.
