@@ -11,7 +11,7 @@ from support import perror
 parser = argparse.ArgumentParser()
 parser.add_argument('-a', type=str, required=True, 
 	help='IPv4 address for the server.')
-parser.add_argument('-sp', type=int, required=True)
+parser.add_argument('-p', type=int, required=True)
 ## parser.add_argument('-cp', type=int, required=True)
 ## going to grab the thread ID for this.
 parser.add_argument('-m', type=str, required=True) 
@@ -21,7 +21,7 @@ parser.add_argument('-f', type=str, required=True,
 args = parser.parse_args()
 
 server_ip = args.a
-server_port = args.sp
+server_port = args.p
 client_port = threading.get_ident() ## formerly args.cp
 filename = args.f
 mode = args.m
