@@ -81,7 +81,7 @@ def unpack_data_packet( datagram ):
 	opcode = int.from_bytes(datagram[0:2], byteorder='big')
 	if opcode == 3:
 		block_num = int.from_bytes(datagram[2:4], byteorder='big')
-		data = datagram[4:].decode()
+		data = datagram[4:].decode("ascii")
 		return opcode, block_num, data
 	else:
 		raise TypeError
