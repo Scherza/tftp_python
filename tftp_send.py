@@ -1,9 +1,11 @@
 
 import socket
 
-def CHUNK_SIZE = 512 # Bytes
+from support import perror
 
-def tftp-send(file, sa, sp, cp):
+CHUNK_SIZE = 512 # Bytes
+
+def tftp_send(filename, sa, sp, cp):
 	
 	try:
 		file = tftp_file_wrapper_send(filename)
@@ -11,7 +13,7 @@ def tftp-send(file, sa, sp, cp):
 		perror("There is no file found with the specified filename in current directory.")
 		return
 
-	sock = socket.socket( AF_INET, SOCK_DGRAM )
+	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	sock.settimeout(1.00)
 	server_address = (sa, sp)
 	sock.bind((sa, cp))
@@ -41,22 +43,22 @@ def tftp-send(file, sa, sp, cp):
 				return
 			trycount = trycount + 1 
 
-		if size(data) < 512 and trycount == 0:
+		if len(data) < 512 and trycount == 0:
 			file.close()
 			socket.close()
 
 		
-class tftp-file-wrapper-send:
-	def __init__():
+class tftp_file_wrapper_send:
+	def __init__(self, filename):
 		file = open(filename, 'rb')
 		offset = -1
 		cache = None
-	def read(ack):
+	def read(self, ack):
 		try:# if cached item requested, return item. if next requested, return next. Else fail.
-			if ack == offset:
-				return cache
-			elif ack == offset + 1:
-				cache = file.read(CHUNK_SIZE)
+			if ack == self.offset:
+				return self.cache
+			elif ack == self.offset + 1:
+				cache = self.file.read(CHUNK_SIZE)
 				offset = ack
 				return cache 
 			else:
@@ -82,3 +84,6 @@ def get_ack(ackgram):
 	else:
 		perror("An errant packet was sent in place of an ack. Exception raised.")
 		raise TypeError
+
+def get_datagram(ack, data):
+	...

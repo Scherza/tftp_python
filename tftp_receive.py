@@ -1,15 +1,17 @@
 import io
 import socket
 
-def CHUNK_SIZE = 512
-def HEADER_SIZE = 4 # wait, why was I caring?
+from support import perror
+
+CHUNK_SIZE = 512
+HEADER_SIZE = 4
 ##### Function which takes in the parameters, then sends a request for a file #####
 #####	Then receives the file, and exits when the file is fully received.	  #####
 def tftp_receive(filename, server_addr, sp, cp):
 	
 	file = tftp_file_wrapper_receive(filename)
 
-	sock = socket.socket( AF_INET, SOCK_DGRAM ) # UDP socket
+	sock = socket.socket( socket.AF_INET, socket.SOCK_DGRAM ) # UDP socket
 	sock.settimeout(1.00) # set timeout for socket -- 
 	server_address = (server_addr, sp) # target server address.
 	sock.bind((server_addr, cp)) #filters for packets received from server into client port.
@@ -33,28 +35,28 @@ def tftp_receive(filename, server_addr, sp, cp):
 			return
 
 		try:
-			file.writeto(seq, data)
+			file.writeto(block_num, data)
 		except Exception as e:
 			perror("Error while writing to file.")
 		
-		sock.sendto(ack_mess(file.offset), server_address)
+		sock.sendto(get_ack(file.block_num), server_address)
 
-		if size(data) < 512:
+		if len(data) < 512:
 			file.close()
 			socket.close()
 			return
 
 ##### Class to abstract file access. #######
 class tftp_file_wrapper_receive:
-	def __init__(filename):
+	def __init__(self, filename):
 		file = open(filename, 'xb') #todo: try/catch
 		offset = 0
 		block_num = 0
-	def writeto(block_ack, data):
-		# appends to file if ack matches length, else raises objection.
-		if block_num == block_ack:
-			offset += file.write(data)
-			return offset
+	def writeto(self, block_ack, data):
+		# appends to file if expected block number. Else excepts.
+		if self.block_num == block_ack:
+			self.offset += self.file.write(data)
+			return self.block_num
 		else:
 			#out-of-order packet. Alternatively, file out-of-range.
 			raise Exception("Packet received out-of-order, or out-of-range.")
@@ -76,3 +78,8 @@ def unpack_data_packet( datagram ):
 		# I don't know what to do with errors now, so we'll just raise a type objection.
 		# todo: err... objections for receiving requests and acks. I'll leave it.
 
+
+def get_ack(ack):
+	opcode = b'\x00\x04'
+	acknowledgement = ack.to_bytes(2, byteorder='big')
+	return opcode + acknowledgement
