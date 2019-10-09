@@ -76,7 +76,7 @@ def build_request_wrq(filename):
 	opcode = b'\x00\x02' #opcode 1 for 'gimme file'
 	filename_ascii = filename.encode()
 	mode = b'netascii' #for ascii data transfer, or, rather, transfer via bytes.
-	return opcode + filename + b'\x00' + mode + b'\x00'	
+	return opcode + filename_ascii + b'\x00' + mode + b'\x00'
 
 def get_ack(ackgram):
 	opcode = int.from_bytes( ackgram [0:2], byteorder ='big')
@@ -88,4 +88,6 @@ def get_ack(ackgram):
 		raise TypeError
 
 def get_datagram(ack, data):
-	...
+	opcode = b'\x00\x03'
+	acknowledgement = ack.to_bytes(2, byteorder='big')
+	return opcode + acknowledgement + data

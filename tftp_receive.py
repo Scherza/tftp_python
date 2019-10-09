@@ -67,7 +67,7 @@ def build_request_rrq(filename):
 	opcode = b'\x00\x01' #opcode 1 for 'gimme file'
 	filename_ascii = filename.encode()
 	mode = b'netascii' #for ascii data transfer, or, rather, transfer via bytes.
-	return opcode + filename + b'\x00' + mode + b'\x00'			
+	return opcode + filename_ascii + b'\x00' + mode + b'\x00'
 
 def unpack_data_packet( datagram ):
 	opcode = int.from_bytes(datagram[0:2], byteorder='big')
