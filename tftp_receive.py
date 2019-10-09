@@ -48,7 +48,7 @@ def tftp_receive(filename, server_addr, sp, cp):
 		
 		sock.sendto(get_ack(file.block_num), server_address)
 
-		if len(data) < 512 or file.block_num >= file_block_limit:
+		if len(data) < 512 or file.block_num > file_block_limit:
 			file.close()
 			sock.close()
 			return
