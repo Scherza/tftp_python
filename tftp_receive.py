@@ -2,6 +2,7 @@ import io
 import socket
 
 from support import perror
+from support import notify
 
 CHUNK_SIZE = 512
 HEADER_SIZE = 4
@@ -19,17 +20,17 @@ def tftp_receive(filename, server_addr, sp, cp):
 	## Send Request ##
 	sock.sendto(build_request_rrq(filename), server_address )
 	trycount = 0
+	notify("Receiving data from " + server_address + " : " + sp + " and receiving at " + cp + ".")
 	## Receive Data ## #todo: check for error packets sent.
 	while True:
 
 		try:
 			datagram, addr = sock.recvfrom(CHUNK_SIZE + HEADER_SIZE + 16) 
 			opcode, block_num, data = unpack_data_packet(datagram)
+			notify("Received " + block_num + " from server.")
 		except socket.timeout as e:
-			if trycount > 2:
-				perror("System Timeout has occurred; server may have terminated early.")
-			else:
-				trycount = trycount + 1
+			perror("System Timeout has occurred; server may have terminated early.")
+			return
 		except TypeError as e:
 			perror("Something happened, and the server sent an errant packet. Exiting application.")
 			return
@@ -62,6 +63,7 @@ class tftp_file_wrapper_receive:
 		# appends to file if expected block number. Else excepts.
 		if self.block_num == block_ack:
 			self.offset += self.file.write(data)
+			notify("Data written: " + str(len(data)) )
 			return self.block_num
 		else:
 			#out-of-order packet. Alternatively, file out-of-range.
