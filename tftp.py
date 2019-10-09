@@ -11,8 +11,8 @@ from support import perror
 parser = argparse.ArgumentParser()
 parser.add_argument('-a', type=str, required=True, 
 	help='IPv4 address for the server.')
-parser.add_argument('-sp', type=int, required=True)
-parser.add_argument('-p', type=int, required=True)
+parser.add_argument('-sp', type=int, choices=range(5000, 0xFFFF) ,required=True)
+parser.add_argument('-p', type=int, choices=range(5000, 0xFFFF), required=True)
 
 parser.add_argument('-m', type=str, required=True) 
 parser.add_argument('-f', type=str, required=True,
@@ -25,6 +25,8 @@ server_port = args.sp
 client_port = args.p
 filename = args.f
 mode = args.m
+
+
 
 # I'd make a main method, but this is python. Here begins main.
 if mode == 'w':
