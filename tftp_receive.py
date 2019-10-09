@@ -20,7 +20,7 @@ def tftp_receive(filename, server_addr, sp, cp):
 	## Send Request ##
 	sock.sendto(build_request_rrq(filename), server_address )
 	trycount = 0
-	notify("Receiving data from " + server_address + " : " + sp + " and receiving at " + cp + ".")
+	notify("Receiving data from " + server_addr + " : " + sp + " and receiving at " + cp + ".")
 	## Receive Data ## #todo: check for error packets sent.
 	while True:
 

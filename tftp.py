@@ -11,14 +11,22 @@ from support import perror
 parser = argparse.ArgumentParser()
 parser.add_argument('-a', type=str, required=True, 
 	help='IPv4 address for the server.')
-parser.add_argument('-sp', type=int, choices=range(5000, 0xFFFF) ,required=True, help="Argument must be in range 5000-65000")
-parser.add_argument('-p', type=int, choices=range(5000, 0xFFFF), required=True, help="Argument must be in range 5000-65000")
+parser.add_argument('-sp', type=int, required=True, help="Argument must be in range 5000-65000")
+parser.add_argument('-p', type=int, required=True, help="Argument must be in range 5000-65000")
 
 parser.add_argument('-m', type=str, required=True) 
 parser.add_argument('-f', type=str, required=True,
 	help='Designates file to write to or read from.')
 
 args = parser.parse_args()
+
+if args.sp <5000 or args.sp > 65535:
+	perror("Argument passed outside of valid range for -sp. Range: 5000 - 65535")
+	quit()
+if args.p < 5000 or args.p > 65535:
+	perror("Argument passed outside of valid range for -p. Range: 5000 - 65535")
+	quit()
+
 
 server_ip = args.a
 server_port = args.sp
