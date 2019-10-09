@@ -41,7 +41,9 @@ def tftp_receive(filename, server_addr, sp, cp):
 				trycount = trycount + 1
 				perror("Error while writing to file.")
 			else:
-				perror("Error while writing to file.")
+				file.close()
+				sock.close()
+				return
 		
 		sock.sendto(get_ack(file.block_num), server_address)
 
