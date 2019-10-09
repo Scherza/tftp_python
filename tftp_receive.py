@@ -45,10 +45,12 @@ def tftp_receive(filename, server_addr, sp, cp):
 				file.close()
 				sock.close()
 				return
+		else:
+			trycount = 0
 		
 		sock.sendto(get_ack(file.block_num), server_address)
 
-		if len(data) < 512 or file.block_num > file_block_limit:
+		if len(data) < 512 or file.block_num >= file_block_limit:
 			file.close()
 			sock.close()
 			return
@@ -82,7 +84,7 @@ def unpack_data_packet( datagram ):
 	opcode = int.from_bytes(datagram[0:2], byteorder='big')
 	if opcode == 3:
 		block_num = int.from_bytes(datagram[2:4], byteorder='big')
-		data = datagram[4:].decode("ascii")
+		data = datagram[4:].decode("utf-8")
 		return opcode, block_num, data
 	else:
 		raise TypeError
