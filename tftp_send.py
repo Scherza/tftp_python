@@ -28,7 +28,7 @@ def tftp_send(filename, sa, sp, cp):
 		try:
 			data = file.read(ack)
 		except EOFError as e:
-			return
+			break
 		# send bit
 		datagram = get_datagram(ack, data)
 		sock.sendto( datagram, server_address )
@@ -40,12 +40,11 @@ def tftp_send(filename, sa, sp, cp):
 		except TimeoutError as e:
 			#Socket timed out, resend with current ack.
 			if trycount > 2: #Try twice, if failed, server is not responding.
+				perror("Server Timed out.")
 				return
-			trycount = trycount + 1 
-
-		if len(data) < 512 and trycount == 0:
-			file.close()
-			sock.close()
+			trycount = trycount + 1
+	file.close()
+	sock.close()
 
 		
 class tftp_file_wrapper_send:

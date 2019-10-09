@@ -20,7 +20,6 @@ def tftp_receive(filename, server_addr, sp, cp):
 	trycount = 0
 	## Receive Data ## #todo: check for error packets sent.
 	while True:
-		datagram, addr, opcode, block_num, data = None 
 
 		try:
 			datagram, addr = sock.recvfrom(CHUNK_SIZE + HEADER_SIZE + 16) 
