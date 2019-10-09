@@ -61,8 +61,9 @@ class tftp_file_wrapper_receive:
 		self.block_num = 0
 	def writeto(self, block_ack, data):
 		# appends to file if expected block number. Else excepts.
-		if self.block_num == block_ack:
+		if self.block_num + 1 == block_ack:
 			self.offset += self.file.write(data)
+			self.block_num = self.block_num + 1
 			notify("Data written: " + str(len(data)) )
 			return self.block_num
 		else:
