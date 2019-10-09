@@ -5,6 +5,7 @@ from support import perror
 
 CHUNK_SIZE = 512
 HEADER_SIZE = 4
+file_block_limit = int.from_bytes(b'\xff\xff', byteorder='big')
 ##### Function which takes in the parameters, then sends a request for a file #####
 #####	Then receives the file, and exits when the file is fully received.	  #####
 def tftp_receive(filename, server_addr, sp, cp):
@@ -36,11 +37,15 @@ def tftp_receive(filename, server_addr, sp, cp):
 		try:
 			file.writeto(block_num, data)
 		except Exception as e:
-			perror("Error while writing to file.")
+			if trycount < 2:
+				trycount = trycount + 1
+				perror("Error while writing to file.")
+			else:
+				perror("Error while writing to file.")
 		
 		sock.sendto(get_ack(file.block_num), server_address)
 
-		if len(data) < 512:
+		if len(data) < 512 or file.block_num >= file_block_limit:
 			file.close()
 			sock.close()
 			return

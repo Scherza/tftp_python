@@ -35,14 +35,15 @@ def tftp_send(filename, sa, sp, cp):
 		# await ack
 		try:
 			ackgram, addr = sock.recvfrom(512)
-			ack = get_ack(ackgram)
-			trycount = 0
 		except TimeoutError as e:
 			#Socket timed out, resend with current ack.
 			if trycount > 2: #Try twice, if failed, server is not responding.
 				perror("Server Timed out.")
 				return
 			trycount = trycount + 1
+		else:
+			ack = get_ack(ackgram)
+			trycount = 0
 	file.close()
 	sock.close()
 
