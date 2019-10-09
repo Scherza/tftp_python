@@ -11,8 +11,8 @@ from support import perror
 parser = argparse.ArgumentParser()
 parser.add_argument('-a', type=str, required=True, 
 	help='IPv4 address for the server.')
-parser.add_argument('-sp', type=int, choices=range(5000, 0xFFFF) ,required=True)
-parser.add_argument('-p', type=int, choices=range(5000, 0xFFFF), required=True)
+parser.add_argument('-sp', type=int, choices=range(5000, 0xFFFF) ,required=True, help="Argument must be in range 5000-65000")
+parser.add_argument('-p', type=int, choices=range(5000, 0xFFFF), required=True, help="Argument must be in range 5000-65000")
 
 parser.add_argument('-m', type=str, required=True) 
 parser.add_argument('-f', type=str, required=True,
