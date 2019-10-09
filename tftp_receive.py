@@ -6,7 +6,7 @@ from support import notify
 
 CHUNK_SIZE = 512
 HEADER_SIZE = 4
-file_block_limit = int.from_bytes(b'\xff\xff', byteorder='big')
+file_block_limit = 65535
 ##### Function which takes in the parameters, then sends a request for a file #####
 #####	Then receives the file, and exits when the file is fully received.	  #####
 def tftp_receive(filename, server_addr, sp, cp):
